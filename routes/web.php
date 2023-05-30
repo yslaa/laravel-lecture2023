@@ -30,7 +30,7 @@ Route::get('reduce/{id}',[ItemController::class, 'getReduceByOne'])->name('item.
 
 Route::get('checkout',[ItemController::class, 'postCheckout'])->name('checkout');
 Route::post('/import', [ItemController::class, 'import'])->name('item-import');
-Route::resource('item', ItemController::class);
+Route::resource('item', ItemController::class)->middleware('role:admin,customer');
 Route::resource('customer', CustomerController::class);
 
 Route::prefix('user')->group(function () {
