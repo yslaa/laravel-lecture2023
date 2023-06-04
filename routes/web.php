@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
-
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/orders/{id}',[OrderController::class,'processOrder'])->name('admin.orderDetails');
     Route::post('/order/{id}', [OrderController::class, 'orderUpdate'])->name('admin.orderUpdate')->middleware('auth');
     Route::get('/users',[UserController::class,'getUsers'])->name('admin.users')->middleware('auth');
+    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.index')->middleware('role:admin');
 });
 Auth::routes();
 

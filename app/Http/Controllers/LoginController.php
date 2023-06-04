@@ -13,11 +13,15 @@ class LoginController extends Controller
             'password' => 'required| min:4'
         ]);
 
-	    if(auth()->attempt(array('email' => $request->email, 'password' => $request->password)))
-        {
+	    if(auth()->attempt(array('email' => $request->email, 'password' => $request->password))) {
+            if (auth()->user()->role === 'admin') {
+                return redirect()->route('dashboard.index');
+            } 
+            else {
                 return redirect()->route('user.profile');
+            }
         }
-        else{
+        else { 
             return redirect()->route('user.signin')
                 ->with('error','Email-Address And Password Are Wrong.');
         }
