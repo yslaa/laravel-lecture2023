@@ -44,12 +44,13 @@ Route::prefix('user')->group(function () {
     Route::get('/order/{id}',[OrderController::class,'orderDetails'])->name('order.orderDetails')->middleware('auth');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::get('/orders',[OrderController::class,'orders'])->name('admin.orders')->middleware('auth');
-    Route::get('/orders/{id}',[OrderController::class,'processOrder'])->name('admin.orderDetails');
-    Route::post('/order/{id}', [OrderController::class, 'orderUpdate'])->name('admin.orderUpdate')->middleware('auth');
-    Route::get('/users',[UserController::class,'getUsers'])->name('admin.users')->middleware('auth');
-    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.index')->middleware('role:admin');
+Route::middleware(['role:admin'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('/orders',[OrderController::class,'orders'])->name('admin.orders');
+        Route::get('/orders/{id}',[OrderController::class,'processOrder'])->name('admin.orderDetails');
+        Route::post('/order/{id}', [OrderController::class, 'orderUpdate'])->name('admin.orderUpdate');
+        Route::get('/users',[UserController::class,'getUsers'])->name('admin.users');
+    });
 });
 Auth::routes();
 

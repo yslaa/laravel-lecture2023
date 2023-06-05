@@ -15,7 +15,7 @@
                 @endif
             </div>
 
-            {{-- <div class="col-sm-6 col-md-6">
+             <div class="col-sm-6 col-md-6">
                 <h2>TownDemographics</h2>
 
                 @if (empty($townChart))
@@ -49,6 +49,6 @@
                     {!! $itemChart->script() !!}
                 @endif
             </div>
-        </div> --}}
+        </div> 
     </div>
     @endsection
