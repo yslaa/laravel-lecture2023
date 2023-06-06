@@ -208,7 +208,7 @@ class ItemController extends Controller
                 //     'orderinfo_id' => $order->orderinfo_id,
                 //     'quantity' => $items['qty'],
                 // ]);
-                $order->items()->attach($id,['quantity'=>$items['qty']]);
+                $order->items()->attach($id, ['quantity' => $items['qty']]);
                 $stock = Stock::find($id);
                 $stock->quantity = $stock->quantity - $items['qty'];
                 $stock->save();

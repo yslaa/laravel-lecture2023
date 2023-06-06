@@ -148,7 +148,7 @@ class DashboardController extends Controller
         $sales = DB::table('orderinfo AS o')
             ->join('orderline AS ol', 'o.orderinfo_id', '=', 'ol.orderinfo_id')
             ->join('item AS i', 'ol.item_id', '=', 'i.item_id')
-
+            ->orderBy(DB::raw('month(o.date_placed)'), 'ASC')
             ->groupBy('o.date_placed')
             ->pluck(
                 DB::raw('sum(ol.quantity * i.sell_price) AS total'),
