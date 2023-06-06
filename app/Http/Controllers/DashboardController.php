@@ -33,7 +33,7 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        Debugbar::info($customer);
+        // Debugbar::info($customer);
         $customer = DB::table('customer')
             ->whereNotNull('title')
             ->groupBy('title')
@@ -48,7 +48,7 @@ class DashboardController extends Controller
         // dd($dataset);
         $dataset = $customerChart->dataset(
             'Customer Demographics',
-            'pie',
+            'outlabeledPie',
             array_values($customer)
         );
         // dd($customerChart);
@@ -97,6 +97,11 @@ class DashboardController extends Controller
                     ],
                 ],
             ],
+            "plugins" => '{datalabels: { font: { weight: \'bold\',
+                size: 36 },
+                color: \'white\',
+       }}',
+            "{outlabels: {display: true}}",
         ]);
 
         $town = DB::table('customer')
@@ -259,6 +264,20 @@ class DashboardController extends Controller
                     ],
                 ],
             ],
+            "anchor" => "end",
+            "offset" => 4,
+            "padding" => 0,
+            "align" => "top",
+            "aspectRatio" => 1,
+            "plugins" => '{ datalabels: {
+                            color: \'green\',
+                            anchor: \'end\',
+                            align: \'end\',
+                            borderRadius: \'4\',
+                            backgroundColor: \'#DDF8E8\',
+                            font: { weight: \'bold\',
+                                     size: \'24\' }
+                            }}',
         ]);
 
         return view(
