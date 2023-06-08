@@ -17,6 +17,7 @@ use Session;
 use App\Cart;
 use DB;
 use App\DataTables\ItemsDataTable;
+use App\Events\OrderCreated;
 use Auth;
 
 class ItemController extends Controller
@@ -224,7 +225,9 @@ class ItemController extends Controller
                 ->with('error', $e->getMessage());
         }
         DB::commit();
+        OrderCreated::dispatch($order, $customer, Auth::user()->email);
         Session::forget('cart');
+
         return redirect()
             ->route('getItems')
             ->with('success', 'Successfully Purchased Your Products!!!');
