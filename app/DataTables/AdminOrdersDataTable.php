@@ -55,9 +55,7 @@ class AdminOrdersDataTable extends DataTable
         // ->join('item as i','ol.item_id', '=', 'i.item_id')
         // ->select('o.orderinfo_id','c.fname', 'c.lname', 'c.addressline', 'o.date_placed', 'o.status', DB::raw("SUM(ol.quantity * i.sell_price) as total"))
         // ->groupBy('o.orderinfo_id', 'o.date_placed','o.orderinfo_id','c.fname', 'c.lname', 'c.addressline', 'o.status')->get();
-        $orders = Order::with(['customer','items'])->whereHas('items', function($query) {
-            $query->where('description', 'LIKE', '%nike%');
-        })->get();
+        $orders = Order::with(['customer','items'])->whereHas('items')->get();
         DebugBar::info($orders);
         return $orders;
     }
