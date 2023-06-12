@@ -12,6 +12,7 @@ use App\Imports\ItemStockImport;
 use App\Imports\ItemCustomerSheetImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Rules\ItemExcelRule;
+use Barryvdh\Debugbar\Facade as DebugBar;
 
 use Session;
 use App\Cart;
@@ -19,6 +20,7 @@ use DB;
 use App\DataTables\ItemsDataTable;
 use App\Events\OrderCreated;
 use Auth;
+use Redirect;
 
 class ItemController extends Controller
 {
@@ -39,7 +41,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('items.create');
     }
 
     /**
@@ -50,7 +52,28 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+       
+        $item = new Item();
+        $item->title = $request->title;
+        $item->description = trim($request->description);
+        $item->sell_price = $request->sell;
+        $item->cost_price = $request->cost;
+        // $item->image_path = $request->cost;
+        $item->save();
+        
+       
+        if($request->document !== null) { 
+            foreach ($request->input("document", []) as $file) {
+                $item
+                    ->addMedia(storage_path("item/images/" . $file))
+                    ->toMediaCollection("images");
+            }
+        }
+        return Redirect::to("item")->with(
+            "success",
+            "Item added successfully!"
+        );
     }
 
     /**
@@ -72,7 +95,17 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item = Item::find($id);
+        $images = $item->getMedia('images');
+        // dd($images);
+        // foreach($images as $image) {
+        //     if($image[0] !== null) {
+        //         DebugBar::info($image[0]->getPath());
+        //     }
+        //     // DebugBar::info($image[0]);
+        // }
+       
+       return view('items.edit', compact('item', 'images'));
     }
 
     /**
@@ -265,4 +298,21 @@ class ItemController extends Controller
             ->back()
             ->with('success', 'Excel file Imported Successfully');
     }
+
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path("item/images");
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $file = $request->file("file");
+        $name = uniqid() . "_" . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            "name" => $name,
+            "original_name" => $file->getClientOriginalName(),
+        ]);
+    }
+    
 }

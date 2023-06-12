@@ -8,6 +8,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Barryvdh\Debugbar\Facade as DebugBar;
 
 class ItemsDataTable extends DataTable
 {
@@ -21,12 +22,21 @@ class ItemsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action',  function($row){
-                $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-
-                return $actionBtn; 
-
-            })->rawColumns(['action']);
+            ->addColumn('images', function ($row) {
+                $images = $row->getMedia('images');
+                foreach ($images as $image) {
+                    Debugbar::info($image);
+                    return "<img src='{$image->getUrl('thumb')}' >";
+                }
+            })
+            ->addColumn('action', function ($row) {
+                $actionBtn =
+                    '<a href="' .
+                    route('item.edit', $row->item_id) .
+                    '" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                return $actionBtn;
+            })
+            ->rawColumns(['action', 'images']);
     }
 
     /**
@@ -48,18 +58,17 @@ class ItemsDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('items-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('create'),
-                        Button::make('export'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    );
+            ->setTableId('items-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons(
+                Button::make('export'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            );
     }
 
     /**
@@ -71,16 +80,21 @@ class ItemsDataTable extends DataTable
     {
         return [
             Column::make('item_id'),
+            Column::computed('images')
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
             Column::make('title'),
             Column::make('description'),
             Column::make('cost_price'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 
