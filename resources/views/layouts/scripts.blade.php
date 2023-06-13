@@ -15,4 +15,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
+
+
 <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>

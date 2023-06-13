@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Events\OrderCreated;
 use Mail;
 use Barryvdh\Debugbar\Facade as DebugBar;
+use Storage;
 
 class SendUserNotification
 {
@@ -31,14 +32,17 @@ class SendUserNotification
         // dd($event);
         $orderinfoId = $event->order->orderinfo_id;
         $email = $event->email;
-        $customer = $event->customer->lname . ' ' . $event->customer->lname;
+        $customer = $event->customer->lname . ' ' . $event->customer->fname;
+        $file = Storage::path('images/test.png');
+        // dd($file);
         Mail::send(
             'email.user_notification',
             ['order_id' => $orderinfoId],
-            function ($message) use ($email, $customer, $orderinfoId) {
+            function ($message) use ($email, $customer, $orderinfoId, $file) {
                 $message->from('admin@test.com', 'Admin');
                 $message->to($email, $customer);
                 $message->subject("Thank you !  {$customer} ");
+                $message->attach($file);
             }
         );
     }
