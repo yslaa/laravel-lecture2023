@@ -8,8 +8,10 @@ use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
 use App\Models\Order;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Item extends Model implements HasMedia
+class Item extends Model implements HasMedia, Searchable
 {
     use HasFactory;
     use HasMediaTrait;
@@ -35,5 +37,16 @@ class Item extends Model implements HasMedia
               ->width(368)
               ->height(232)
               ->sharpen(10);
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+       $url = route('item.show', $this->item_id);
+    
+        return new \Spatie\Searchable\SearchResult(
+           $this,
+           $this->title,
+           $url
+        );
     }
 }

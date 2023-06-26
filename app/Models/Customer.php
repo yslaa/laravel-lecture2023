@@ -23,4 +23,15 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getSearchResult(): SearchResult
+    {
+       $url = route('customer.show', $this->customer_id);
+    
+        return new \Spatie\Searchable\SearchResult(
+           $this,
+           $this->lname. " ". $this->fname,
+           $url
+        );
+    }
 }
