@@ -1,16 +1,16 @@
 @extends('layouts.master')
 @section('content')
-<h1>Search</h1>
+    <h1>Search</h1>
 
-There are {{ $searchResults->count() }} results.
+    There are {{ $searchResults->count() }} results.
 
-@foreach($searchResults->groupByType() as $type => $modelSearchResults)
-   <h2>{{ $type }}</h2>
-   
-   @foreach($modelSearchResults as $searchResult)
-       <ul>
-            <a href="{{ $searchResult->url }}">{{ $searchResult->title }}</a>
-       </ul>
-   @endforeach
-@endforeach
+    @foreach ($searchResults->groupByType() as $type => $modelSearchResults)
+        <h2>{{ $type }}</h2>
+
+        @foreach ($modelSearchResults as $searchResult)
+            <ul>
+                <a href="{{ $searchResult->url }}">{{ $searchResult->title }}</a>
+            </ul>
+        @endforeach
+    @endforeach
 @endsection
