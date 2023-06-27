@@ -32,6 +32,7 @@ Route::get('checkout',[ItemController::class, 'postCheckout'])->name('checkout')
 Route::post('/import', [ItemController::class, 'import'])->name('item-import');
 Route::resource('item', ItemController::class)->middleware('role:admin,customer');
 Route::post('item/store-media', [ItemController::class, 'storeMedia'])->name('item.storeMedia')->middleware('role:admin');
+Route::post('/search', [SearchController::class, 'search'])->name('search');
 Route::resource('customer', CustomerController::class);
 
 Route::prefix('user')->group(function () {
